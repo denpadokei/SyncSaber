@@ -63,12 +63,7 @@ namespace SyncSaber
 
         private void BSEvents_earlyMenuSceneLoadedFresh(ScenesTransitionSetupDataSO obj)
         {
-            try {
-                BSMLSettings.instance.AddSettingsMenu("SYNC SABER", SettingViewController.instance.ResourceName, SettingViewController.instance);
-            }
-            catch (Exception e) {
-                Logger.Error(e);
-            }
+            
         }
 
 

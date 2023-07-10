@@ -94,6 +94,11 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="Unity.ResourceManager, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <Private>False</Private>
+      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\Unity.ResourceManager.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
     <Reference Include="Unity.TextMeshPro">
       <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\Unity.TextMeshPro.dll</HintPath>
     </Reference>
@@ -178,6 +183,7 @@
     <Compile Include="SyncSaberController.cs" />
     <Compile Include="UI\SettingViewController.cs" />
     <Compile Include="Utilities\IO_Util.cs" />
+    <Compile Include="Utilities\MainThreadInvoker.cs" />
     <Compile Include="Utilities\PlaylistDownLoader\Utility.cs" />
     <Compile Include="Utilities\Stack.cs" />
     <Compile Include="Utilities\TMPUtil.cs" />

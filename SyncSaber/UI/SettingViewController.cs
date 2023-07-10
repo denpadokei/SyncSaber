@@ -1,10 +1,15 @@
 ﻿using BeatSaberMarkupLanguage.Attributes;
+using BeatSaberMarkupLanguage.Settings;
+using BeatSaberMarkupLanguage.ViewControllers;
 using SyncSaber.Configuration;
+using System;
 using System.Collections.Generic;
+using Zenject;
 
 namespace SyncSaber.UI
 {
-    internal class SettingViewController : PersistentSingleton<SettingViewController>
+    [HotReload]
+    internal class SettingViewController : BSMLAutomaticViewController, IInitializable
     {
         // For this method of setting the ResourceName, this class must be the first class in the file.
         public string ResourceName => string.Join(".", this.GetType().Namespace, "SettingView.bsml");
@@ -93,15 +98,9 @@ namespace SyncSaber.UI
                 }
             }
 #pragma warning restore CS0162 // 到達できないコードが検出されました
-            set
-            {
-                if (value == this.SortModes[0]) {
-                    PluginConfig.Instance.RankSort = ScoreSabers.ScoreSaberManager.RankSort.DateRanked;
-                }
-                else {
-                    PluginConfig.Instance.RankSort = ScoreSabers.ScoreSaberManager.RankSort.StarDifficulity;
-                }
-            }
+            set => PluginConfig.Instance.RankSort = value == this.SortModes[0]
+                    ? ScoreSabers.ScoreSaberManager.RankSort.DateRanked
+                    : ScoreSabers.ScoreSaberManager.RankSort.StarDifficulity;
         }
         #endregion
         //ﾟ+｡*ﾟ+｡｡+ﾟ*｡+ﾟ ﾟ+｡*ﾟ+｡｡+ﾟ*｡+ﾟ ﾟ+｡*ﾟ+｡*ﾟ+｡｡+ﾟ*｡+ﾟ ﾟ+｡*ﾟ+｡｡+ﾟ*｡+ﾟ ﾟ+｡*ﾟ+｡*ﾟ+｡｡+ﾟ*｡+ﾟ ﾟ+｡*ﾟ+｡｡+ﾟ*｡+ﾟ ﾟ+｡*
@@ -115,9 +114,23 @@ namespace SyncSaber.UI
         #endregion
         //ﾟ+｡*ﾟ+｡｡+ﾟ*｡+ﾟ ﾟ+｡*ﾟ+｡｡+ﾟ*｡+ﾟ ﾟ+｡*ﾟ+｡*ﾟ+｡｡+ﾟ*｡+ﾟ ﾟ+｡*ﾟ+｡｡+ﾟ*｡+ﾟ ﾟ+｡*ﾟ+｡*ﾟ+｡｡+ﾟ*｡+ﾟ ﾟ+｡*ﾟ+｡｡+ﾟ*｡+ﾟ ﾟ+｡*
         #region // パブリックメソッド
+        public void Initialize()
+        {
+            try {
+                BSMLSettings.instance.AddSettingsMenu("SYNC SABER", this.ResourceName, this);
+            }
+            catch (Exception e) {
+                Logger.Error(e);
+            }
+        }
         #endregion
         //ﾟ+｡*ﾟ+｡｡+ﾟ*｡+ﾟ ﾟ+｡*ﾟ+｡｡+ﾟ*｡+ﾟ ﾟ+｡*ﾟ+｡*ﾟ+｡｡+ﾟ*｡+ﾟ ﾟ+｡*ﾟ+｡｡+ﾟ*｡+ﾟ ﾟ+｡*ﾟ+｡*ﾟ+｡｡+ﾟ*｡+ﾟ ﾟ+｡*ﾟ+｡｡+ﾟ*｡+ﾟ ﾟ+｡*
         #region // プライベートメソッド
+        protected override void OnDestroy()
+        {
+            BSMLSettings.instance.RemoveSettingsMenu(this);
+            base.OnDestroy();
+        }
         #endregion
         //ﾟ+｡*ﾟ+｡｡+ﾟ*｡+ﾟ ﾟ+｡*ﾟ+｡｡+ﾟ*｡+ﾟ ﾟ+｡*ﾟ+｡*ﾟ+｡｡+ﾟ*｡+ﾟ ﾟ+｡*ﾟ+｡｡+ﾟ*｡+ﾟ ﾟ+｡*ﾟ+｡*ﾟ+｡｡+ﾟ*｡+ﾟ ﾟ+｡*ﾟ+｡｡+ﾟ*｡+ﾟ ﾟ+｡*
         #region // メンバ変数

@@ -138,7 +138,7 @@ namespace SyncSaber
                 return;
             }
             Logger.Info(text);
-            HMMainThreadDispatcher.instance?.Enqueue(() =>
+            MainThreadInvoker.Instance.Enqueue(() =>
             {
                 NotificationTextChange?.Invoke("SyncSaber - " + text);
             });
