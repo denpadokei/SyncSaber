@@ -565,7 +565,7 @@ namespace SyncSaber.SimpleJSON
 
         public static JSONNode Parse(string aJSON)
         {
-            var stack = new Stack<JSONNode>();
+            var stack = new System.Collections.Generic.Stack<JSONNode>();
             JSONNode ctx = null;
             var i = 0;
             var Token = new StringBuilder();
