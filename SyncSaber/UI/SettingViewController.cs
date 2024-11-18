@@ -117,7 +117,7 @@ namespace SyncSaber.UI
         public void Initialize()
         {
             try {
-                BSMLSettings.instance.AddSettingsMenu("SYNC SABER", this.ResourceName, this);
+                BSMLSettings.Instance.AddSettingsMenu("SYNC SABER", this.ResourceName, this);
             }
             catch (Exception e) {
                 Logger.Error(e);
@@ -128,7 +128,7 @@ namespace SyncSaber.UI
         #region // プライベートメソッド
         protected override void OnDestroy()
         {
-            BSMLSettings.instance.RemoveSettingsMenu(this);
+            BSMLSettings.Instance.RemoveSettingsMenu(this);
             base.OnDestroy();
         }
         #endregion
