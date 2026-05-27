@@ -86,10 +86,10 @@ namespace SyncSaber.UI
             get
             {
                 switch (PluginConfig.Instance.RankSort) {
-                    case ScoreSabers.ScoreSaberManager.RankSort.DateRanked:
+                    case ScoreSabers.ScoreSaberManager.RankSort.LatestRankedAt:
                         return this.SortModes[0];
                         break;
-                    case ScoreSabers.ScoreSaberManager.RankSort.StarDifficulity:
+                    case ScoreSabers.ScoreSaberManager.RankSort.HighestStars:
                         return this.SortModes[1];
                         break;
                     default:
@@ -99,8 +99,8 @@ namespace SyncSaber.UI
             }
 #pragma warning restore CS0162 // 到達できないコードが検出されました
             set => PluginConfig.Instance.RankSort = value == this.SortModes[0]
-                    ? ScoreSabers.ScoreSaberManager.RankSort.DateRanked
-                    : ScoreSabers.ScoreSaberManager.RankSort.StarDifficulity;
+                    ? ScoreSabers.ScoreSaberManager.RankSort.LatestRankedAt
+                    : ScoreSabers.ScoreSaberManager.RankSort.HighestStars;
         }
         #endregion
         //ﾟ+｡*ﾟ+｡｡+ﾟ*｡+ﾟ ﾟ+｡*ﾟ+｡｡+ﾟ*｡+ﾟ ﾟ+｡*ﾟ+｡*ﾟ+｡｡+ﾟ*｡+ﾟ ﾟ+｡*ﾟ+｡｡+ﾟ*｡+ﾟ ﾟ+｡*ﾟ+｡*ﾟ+｡｡+ﾟ*｡+ﾟ ﾟ+｡*ﾟ+｡｡+ﾟ*｡+ﾟ ﾟ+｡*

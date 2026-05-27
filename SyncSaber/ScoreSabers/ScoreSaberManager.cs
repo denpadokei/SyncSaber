@@ -9,30 +9,31 @@ namespace SyncSaber.ScoreSabers
     public static class ScoreSaberManager
     {
         public const string BASEURL = "https://scoresaber.com/api.php";
-        public const string BASEURL_V2 = "https://scoresaber.com/api/v2/maps";
+        public const string BASEURL_V2 = "https://scoresaber.com/api/v2";
 
         public static async Task<JSONArray> Ranked(int songcouts, RankSort sort)
         {
             var pageCount = 0;
             var results = new JSONArray();
             do {
-                var url = $"/api/leaderboards?ranked=true&category={(int)sort}&sort=0&unique=true&page={pageCount}";
-                var buff = await WebClient.GetAsync($"{BASEURL}{url}", new CancellationTokenSource().Token);
+                // https://scoresaber.com/api/v2/maps?page=2&limit=100&status=RANKED&sortBy=latestRankedAt
+                var url = $"/maps?page={++pageCount}&limit=100&status=RANKED&sortBy={GetEnumDescription(sort)}";
+                var buff = await WebClient.GetAsync($"{BASEURL_V2}{url}", new CancellationTokenSource().Token);
                 if (buff == null) {
                     return null;
                 }
                 var json = JSON.Parse(buff.ContentToString());
-                if (json["leaderboards"] == null || !json["leaderboards"].IsArray) {
+                if (json["data"] == null || !json["data"].IsArray) {
                     return null;
                 }
-                var rankSongs = json["leaderboards"].AsArray;
+                var rankSongs = json["data"].AsArray;
                 foreach (var song in rankSongs.Values) {
                     results.Add(song.AsObject);
                     if (songcouts <= results.Count) {
                         break;
                     }
                 }
-                pageCount++;
+                await Task.Delay(2000);
             } while (results.Count < songcouts);
             return results;
         }
@@ -41,11 +42,16 @@ namespace SyncSaber.ScoreSabers
         /// </summary>
         public enum RankSort
         {
+            [Description("latestRankedAt")]
+            LatestRankedAt,
+            [Description("createdAt")]
+            CreatedAt,
+            [Description("highestStars")]
+            HighestStars,
+            [Description("totalScores")]
+            TotalScores,
+            [Description("trending")]
             Trending,
-            DateRanked,
-            ScoreSet,
-            StarDifficulity,
-            Author
         }
 
         private static string GetEnumDescription(RankSort value)
