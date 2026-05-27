@@ -1,5 +1,6 @@
 ﻿using SyncSaber.NetWorks;
 using SyncSaber.SimpleJSON;
+using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -7,7 +8,9 @@ namespace SyncSaber.ScoreSabers
 {
     public static class ScoreSaberManager
     {
-        public const string BASEURL = "https://scoresaber.com";
+        public const string BASEURL = "https://scoresaber.com/api.php";
+        public const string BASEURL_V2 = "https://scoresaber.com/api/v2/maps";
+
         public static async Task<JSONArray> Ranked(int songcouts, RankSort sort)
         {
             var pageCount = 0;
@@ -43,6 +46,13 @@ namespace SyncSaber.ScoreSabers
             ScoreSet,
             StarDifficulity,
             Author
+        }
+
+        private static string GetEnumDescription(RankSort value)
+        {
+            var field = value.GetType().GetField(value.ToString());
+            var attribute = field.GetCustomAttributes(typeof(DescriptionAttribute), false);
+            return attribute.Length > 0 ? (attribute[0] as DescriptionAttribute).Description : value.ToString();
         }
     }
 }

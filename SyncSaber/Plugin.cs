@@ -16,7 +16,7 @@ using IPALogger = IPA.Logging.Logger;
 
 namespace SyncSaber
 {
-    [Plugin(RuntimeOptions.SingleStartInit)]
+    [Plugin(RuntimeOptions.DynamicInit)]
     public class Plugin
     {
         public bool IsInGame { get; private set; }
@@ -51,8 +51,8 @@ namespace SyncSaber
             //SyncSaber.OnLoad();
         }
 
-        [OnStart]
-        public void OnApplicationStart()
+        [OnEnable]
+        public void OnEnable()
         {
             Instance = this;
 
@@ -71,7 +71,6 @@ namespace SyncSaber
         public void OnApplicationQuit()
         {
             SceneManager.activeSceneChanged -= this.SceneManagerOnActiveSceneChanged;
-            BSEvents.earlyMenuSceneLoadedFresh -= this.BSEvents_earlyMenuSceneLoadedFresh;
         }
 
         private void SceneManagerOnActiveSceneChanged(Scene arg0, Scene scene)
