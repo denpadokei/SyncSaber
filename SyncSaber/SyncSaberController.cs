@@ -522,7 +522,7 @@ namespace SyncSaber
                     while (Plugin.Instance?.IsInGame != false) {
                         await Task.Delay(200);
                     }
-                    var hash = ppMap["songHash"].Value.ToLower();
+                    var hash = ppMap["hash"].Value.ToLower();
                     var beatmap = Loader.GetLevelByHash(hash);
                     if (beatmap != null) {
                         this.UpdatePlaylist(this._syncSaberSongs, hash, beatmap.songName);
@@ -565,7 +565,7 @@ namespace SyncSaber
                     this.UpdatePlaylist(this._syncSaberSongs, hash, jsonObject["name"].Value);
                 }
                 catch (Exception e) {
-                    Logger.Error($"{e}\r\n{ppMap["name"]} : {ppMap["id"]}");
+                    Logger.Error($"{e}\r\n{ppMap["songName"]} : {ppMap["bsid"]}");
                     Logger.Debug($"{ppMap}");
                 }
             }

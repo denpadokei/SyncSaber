@@ -17,7 +17,7 @@ namespace SyncSaber.Configuration
         public virtual int MaxCuratorRecommendedPages { get; set; } = 3;
         public virtual int MaxPPSongsCount { get; set; } = 500;
         [UseConverter(typeof(EnumConverter<ScoreSabers.ScoreSaberManager.RankSort>))]
-        public virtual ScoreSabers.ScoreSaberManager.RankSort RankSort { get; set; } = ScoreSabers.ScoreSaberManager.RankSort.DateRanked;
+        public virtual ScoreSabers.ScoreSaberManager.RankSort RankSort { get; set; } = ScoreSabers.ScoreSaberManager.RankSort.LatestRankedAt;
         public virtual bool DeleteOldVersions { get; set; } = false;
         public virtual bool SyncBookmarksFeed { get; set; } = true;
         public virtual bool SyncCuratorRecommendedFeed { get; set; } = false;

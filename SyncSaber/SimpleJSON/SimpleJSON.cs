@@ -582,11 +582,11 @@ namespace SyncSaber.SimpleJSON
                         }
                         stack.Push(new JSONObject());
                         if (ctx != null) {
-                            ctx.Add(TokenName, stack.Peek());
+                            ctx.Add(TokenName, (JSONNode)stack.Peek());
                         }
                         TokenName = "";
                         Token.Length = 0;
-                        ctx = stack.Peek();
+                        ctx = (JSONNode)stack.Peek();
                         HasNewlineChar = false;
                         break;
 
@@ -598,11 +598,11 @@ namespace SyncSaber.SimpleJSON
 
                         stack.Push(new JSONArray());
                         if (ctx != null) {
-                            ctx.Add(TokenName, stack.Peek());
+                            ctx.Add(TokenName, (JSONNode)stack.Peek());
                         }
                         TokenName = "";
                         Token.Length = 0;
-                        ctx = stack.Peek();
+                        ctx = (JSONNode)stack.Peek();
                         HasNewlineChar = false;
                         break;
 
