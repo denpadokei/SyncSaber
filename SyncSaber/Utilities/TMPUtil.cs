@@ -1,11 +1,26 @@
-﻿using System.Linq;
+﻿using BeatSaberMarkupLanguage.FloatingScreen;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 
-namespace SyncSaber
+namespace SyncSaber.Utilities
 {
-    public class BeatSaberUI : MonoBehaviour
+    public static class TMPUtil
     {
+        public static TextMeshProUGUI CreateNotificationText(string text, FloatingScreen screen)
+        {
+            var notificationText = CreateText(screen.transform as RectTransform, text, new Vector2(0f, 0f), new Vector2(0f, 0f));
+
+            notificationText.text = text;
+            notificationText.fontSize = 10f;
+            notificationText.alignment = TextAlignmentOptions.Center;
+            return notificationText;
+        }
+
         /// <summary>
         /// Creates a TextMeshProUGUI component.
         /// </summary>
@@ -28,11 +43,11 @@ namespace SyncSaber
         /// <returns>The newly created TextMeshProUGUI component.</returns>
         public static TextMeshProUGUI CreateText(RectTransform parent, string text, Vector2 anchoredPosition, Vector2 sizeDelta)
         {
-            GameObject gameObj = new GameObject("CustomUIText");
+            var gameObj = new GameObject("CustomUIText");
             gameObj.SetActive(false);
 
-            TextMeshProUGUI textMesh = gameObj.AddComponent<TextMeshProUGUI>();
-            textMesh.font = Instantiate(Resources.FindObjectsOfTypeAll<TMP_FontAsset>().First(t => t.name == "Teko-Medium SDF No Glow"));
+            var textMesh = gameObj.AddComponent<TextMeshProUGUI>();
+            textMesh.font = GameObject.Instantiate(Resources.FindObjectsOfTypeAll<TMP_FontAsset>().First(t => t.name == "Teko-Medium SDF No Glow"));
             textMesh.rectTransform.SetParent(parent, false);
             textMesh.text = text;
             textMesh.fontSize = 4;

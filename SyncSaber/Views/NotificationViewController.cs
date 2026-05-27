@@ -1,15 +1,19 @@
 ﻿using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.FloatingScreen;
 using BeatSaberMarkupLanguage.ViewControllers;
+using HMUI;
 using SyncSaber.Interfaces;
+using SyncSaber.Utilities.PlaylistDownLoader;
 using System;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 using Zenject;
 
 namespace SyncSaber.Views
 {
     [HotReload]
-    internal class SyncSaberController : BSMLAutomaticViewController, IInitializable
+    internal class NotificationViewController : BSMLAutomaticViewController, IInitializable
     {
         /// <summary>説明 を取得、設定</summary>
         private string notificationText_;
@@ -21,16 +25,25 @@ namespace SyncSaber.Views
 
             set
             {
+                if (!this._floatingScreen.isActiveAndEnabled && !string.IsNullOrEmpty(notificationText_)) {
+                    this._floatingScreen.gameObject.SetActive(true);
+                }
                 this.notificationText_ = value;
                 this.NotifyPropertyChanged();
+                if (string.IsNullOrEmpty(notificationText_)) {
+                    this._floatingScreen.gameObject.SetActive(false);
+                }
             }
         }
-        [Inject]
-        private readonly ISyncSaber _syncSaber;
-        [Inject]
-        private readonly DiContainer _diContainer;
+        private ISyncSaber _syncSaber;
         private DateTime _uiResetTime;
         private FloatingScreen _floatingScreen;
+
+        [Inject]
+        protected void Constractor(ISyncSaber syncSaber)
+        {
+            this._syncSaber = syncSaber;
+        }
 
         private void Awake()
         {
@@ -52,8 +65,9 @@ namespace SyncSaber.Views
 
         private void Update()
         {
-            if (!string.IsNullOrEmpty(this.NotificationText) && this._uiResetTime <= DateTime.Now)
+            if (!string.IsNullOrEmpty(this.NotificationText) && this._uiResetTime <= DateTime.Now) {
                 this.NotificationText = "";
+            }
         }
 
         public async void Initialize()
@@ -62,6 +76,9 @@ namespace SyncSaber.Views
             try {
                 this._floatingScreen = FloatingScreen.CreateFloatingScreen(new Vector2(100f, 20f), false, new Vector3(0f, 0.3f, 2.8f), new Quaternion(0f, 0f, 0f, 0f));
                 this._floatingScreen.SetRootViewController(this, AnimationType.None);
+                foreach (var g in this._floatingScreen.gameObject.GetComponentsInChildren<Graphic>()) {
+                    g.raycastTarget = false;
+                }
             }
             catch (Exception e) {
                 Logger.Error(e);
@@ -69,7 +86,7 @@ namespace SyncSaber.Views
             try {
                 this._syncSaber.NotificationTextChange -= this.NotificationTextChange;
                 this._syncSaber.NotificationTextChange += this.NotificationTextChange;
-                if (Plugin.instance.IsPlaylistDownlaoderInstalled) {
+                if (Utility.IsPlaylistDownLoaderInstalled()) {
                     this._syncSaber.SetEvent();
                 }
                 await this._syncSaber.Sync();

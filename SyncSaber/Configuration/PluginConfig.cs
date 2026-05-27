@@ -1,4 +1,6 @@
 ﻿using IPA.Config.Stores;
+using IPA.Config.Stores.Attributes;
+using IPA.Config.Stores.Converters;
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo(GeneratedStore.AssemblyVisibilityTarget)]
@@ -14,6 +16,7 @@ namespace SyncSaber.Configuration
         public virtual int MaxBookmarksPages { get; set; } = 3;
         public virtual int MaxCuratorRecommendedPages { get; set; } = 3;
         public virtual int MaxPPSongsCount { get; set; } = 500;
+        [UseConverter(typeof(EnumConverter<ScoreSabers.ScoreSaberManager.RankSort>))]
         public virtual ScoreSabers.ScoreSaberManager.RankSort RankSort { get; set; } = ScoreSabers.ScoreSaberManager.RankSort.DateRanked;
         public virtual bool DeleteOldVersions { get; set; } = false;
         public virtual bool SyncBookmarksFeed { get; set; } = true;

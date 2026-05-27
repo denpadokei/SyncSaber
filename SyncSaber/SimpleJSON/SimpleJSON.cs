@@ -33,6 +33,7 @@
  * SOFTWARE.
  * 
  * * * * */
+using SyncSaber.Utilities;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -68,7 +69,7 @@ namespace SyncSaber.SimpleJSON
             private readonly Type type;
             private Dictionary<string, JSONNode>.Enumerator m_Object;
             private List<JSONNode>.Enumerator m_Array;
-            public bool IsValid { get { return this.type != Type.None; } }
+            public bool IsValid => this.type != Type.None;
             public Enumerator(List<JSONNode>.Enumerator aArrayEnum)
             {
                 this.type = Type.Array;
@@ -85,19 +86,25 @@ namespace SyncSaber.SimpleJSON
             {
                 get
                 {
-                    if (this.type == Type.Array)
+                    if (this.type == Type.Array) {
                         return new KeyValuePair<string, JSONNode>(string.Empty, this.m_Array.Current);
-                    else if (this.type == Type.Object)
+                    }
+                    else if (this.type == Type.Object) {
                         return this.m_Object.Current;
+                    }
+
                     return new KeyValuePair<string, JSONNode>(string.Empty, null);
                 }
             }
             public bool MoveNext()
             {
-                if (this.type == Type.Array)
+                if (this.type == Type.Array) {
                     return this.m_Array.MoveNext();
-                else if (this.type == Type.Object)
+                }
+                else if (this.type == Type.Object) {
                     return this.m_Object.MoveNext();
+                }
+
                 return false;
             }
         }
@@ -107,9 +114,16 @@ namespace SyncSaber.SimpleJSON
             public ValueEnumerator(List<JSONNode>.Enumerator aArrayEnum) : this(new Enumerator(aArrayEnum)) { }
             public ValueEnumerator(Dictionary<string, JSONNode>.Enumerator aDictEnum) : this(new Enumerator(aDictEnum)) { }
             public ValueEnumerator(Enumerator aEnumerator) { this.m_Enumerator = aEnumerator; }
-            public JSONNode Current { get { return this.m_Enumerator.Current.Value; } }
-            public bool MoveNext() { return this.m_Enumerator.MoveNext(); }
-            public ValueEnumerator GetEnumerator() { return this; }
+            public JSONNode Current => this.m_Enumerator.Current.Value;
+            public bool MoveNext()
+            {
+                return this.m_Enumerator.MoveNext();
+            }
+
+            public ValueEnumerator GetEnumerator()
+            {
+                return this;
+            }
         }
         public struct KeyEnumerator
         {
@@ -117,9 +131,16 @@ namespace SyncSaber.SimpleJSON
             public KeyEnumerator(List<JSONNode>.Enumerator aArrayEnum) : this(new Enumerator(aArrayEnum)) { }
             public KeyEnumerator(Dictionary<string, JSONNode>.Enumerator aDictEnum) : this(new Enumerator(aDictEnum)) { }
             public KeyEnumerator(Enumerator aEnumerator) { this.m_Enumerator = aEnumerator; }
-            public string Current { get { return this.m_Enumerator.Current.Key; } }
-            public bool MoveNext() { return this.m_Enumerator.MoveNext(); }
-            public KeyEnumerator GetEnumerator() { return this; }
+            public string Current => this.m_Enumerator.Current.Key;
+            public bool MoveNext()
+            {
+                return this.m_Enumerator.MoveNext();
+            }
+
+            public KeyEnumerator GetEnumerator()
+            {
+                return this;
+            }
         }
 
         public class LinqEnumerator : IEnumerator<KeyValuePair<string, JSONNode>>, IEnumerable<KeyValuePair<string, JSONNode>>
@@ -129,12 +150,16 @@ namespace SyncSaber.SimpleJSON
             internal LinqEnumerator(JSONNode aNode)
             {
                 this.m_Node = aNode;
-                if (this.m_Node != null)
+                if (this.m_Node != null) {
                     this.m_Enumerator = this.m_Node.GetEnumerator();
+                }
             }
-            public KeyValuePair<string, JSONNode> Current { get { return this.m_Enumerator.Current; } }
-            object IEnumerator.Current { get { return this.m_Enumerator.Current; } }
-            public bool MoveNext() { return this.m_Enumerator.MoveNext(); }
+            public KeyValuePair<string, JSONNode> Current => this.m_Enumerator.Current;
+            object IEnumerator.Current => this.m_Enumerator.Current;
+            public bool MoveNext()
+            {
+                return this.m_Enumerator.MoveNext();
+            }
 
             public void Dispose()
             {
@@ -149,8 +174,9 @@ namespace SyncSaber.SimpleJSON
 
             public void Reset()
             {
-                if (this.m_Node != null)
+                if (this.m_Node != null) {
                     this.m_Enumerator = this.m_Node.GetEnumerator();
+                }
             }
 
             IEnumerator IEnumerable.GetEnumerator()
@@ -169,22 +195,22 @@ namespace SyncSaber.SimpleJSON
 
         public abstract JSONNodeType Tag { get; }
 
-        public virtual JSONNode this[int aIndex] { get { return null; } set { } }
+        public virtual JSONNode this[int aIndex] { get => null; set { } }
 
-        public virtual JSONNode this[string aKey] { get { return null; } set { } }
+        public virtual JSONNode this[string aKey] { get => null; set { } }
 
-        public virtual string Value { get { return ""; } set { } }
+        public virtual string Value { get => ""; set { } }
 
-        public virtual int Count { get { return 0; } }
+        public virtual int Count => 0;
 
-        public virtual bool IsNumber { get { return false; } }
-        public virtual bool IsString { get { return false; } }
-        public virtual bool IsBoolean { get { return false; } }
-        public virtual bool IsNull { get { return false; } }
-        public virtual bool IsArray { get { return false; } }
-        public virtual bool IsObject { get { return false; } }
+        public virtual bool IsNumber => false;
+        public virtual bool IsString => false;
+        public virtual bool IsBoolean => false;
+        public virtual bool IsNull => false;
+        public virtual bool IsArray => false;
+        public virtual bool IsObject => false;
 
-        public virtual bool Inline { get { return false; } set { } }
+        public virtual bool Inline { get => false; set { } }
 
         public virtual void Add(string aKey, JSONNode aItem)
         {
@@ -208,6 +234,7 @@ namespace SyncSaber.SimpleJSON
         {
             return aNode;
         }
+
         public virtual void Clear() { }
 
         public virtual JSONNode Clone()
@@ -227,9 +254,11 @@ namespace SyncSaber.SimpleJSON
         {
             get
             {
-                foreach (var C in this.Children)
-                    foreach (var D in C.DeepChildren)
+                foreach (var C in this.Children) {
+                    foreach (var D in C.DeepChildren) {
                         yield return D;
+                    }
+                }
             }
         }
 
@@ -245,23 +274,23 @@ namespace SyncSaber.SimpleJSON
 
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             this.WriteToStringBuilder(sb, 0, 0, JSONTextMode.Compact);
             return sb.ToString();
         }
 
         public virtual string ToString(int aIndent)
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             this.WriteToStringBuilder(sb, 0, aIndent, JSONTextMode.Indent);
             return sb.ToString();
         }
         internal abstract void WriteToStringBuilder(StringBuilder aSB, int aIndent, int aIndentInc, JSONTextMode aMode);
 
         public abstract Enumerator GetEnumerator();
-        public IEnumerable<KeyValuePair<string, JSONNode>> Linq { get { return new LinqEnumerator(this); } }
-        public KeyEnumerator Keys { get { return new KeyEnumerator(this.GetEnumerator()); } }
-        public ValueEnumerator Values { get { return new ValueEnumerator(this.GetEnumerator()); } }
+        public IEnumerable<KeyValuePair<string, JSONNode>> Linq => new LinqEnumerator(this);
+        public KeyEnumerator Keys => new KeyEnumerator(this.GetEnumerator());
+        public ValueEnumerator Values => new ValueEnumerator(this.GetEnumerator());
 
         #endregion common interface
 
@@ -272,89 +301,69 @@ namespace SyncSaber.SimpleJSON
         {
             get
             {
-                double v = 0.0;
-                if (double.TryParse(this.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out v))
+                if (double.TryParse(this.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out var v)) {
                     return v;
+                }
+
                 return 0.0;
             }
-            set
-            {
-                this.Value = value.ToString(CultureInfo.InvariantCulture);
-            }
+            set => this.Value = value.ToString(CultureInfo.InvariantCulture);
         }
 
         public virtual int AsInt
         {
-            get { return (int)this.AsDouble; }
-            set { this.AsDouble = value; }
+            get => (int)this.AsDouble;
+            set => this.AsDouble = value;
         }
 
         public virtual float AsFloat
         {
-            get { return (float)this.AsDouble; }
-            set { this.AsDouble = value; }
+            get => (float)this.AsDouble;
+            set => this.AsDouble = value;
         }
 
         public virtual bool AsBool
         {
             get
             {
-                bool v = false;
-                if (bool.TryParse(this.Value, out v))
+                if (bool.TryParse(this.Value, out var v)) {
                     return v;
+                }
+
                 return !string.IsNullOrEmpty(this.Value);
             }
-            set
-            {
-                this.Value = (value) ? "true" : "false";
-            }
+            set => this.Value = (value) ? "true" : "false";
         }
 
         public virtual long AsLong
         {
             get
             {
-                long val = 0;
-                if (long.TryParse(this.Value, out val))
+                if (long.TryParse(this.Value, out var val)) {
                     return val;
+                }
+
                 return 0L;
             }
-            set
-            {
-                this.Value = value.ToString();
-            }
+            set => this.Value = value.ToString();
         }
 
         public virtual ulong AsULong
         {
             get
             {
-                ulong val = 0;
-                if (ulong.TryParse(this.Value, out val))
+                if (ulong.TryParse(this.Value, out var val)) {
                     return val;
+                }
+
                 return 0;
             }
-            set
-            {
-                this.Value = value.ToString();
-            }
+            set => this.Value = value.ToString();
         }
 
-        public virtual JSONArray AsArray
-        {
-            get
-            {
-                return this as JSONArray;
-            }
-        }
+        public virtual JSONArray AsArray => this as JSONArray;
 
-        public virtual JSONObject AsObject
-        {
-            get
-            {
-                return this as JSONObject;
-            }
-        }
+        public virtual JSONObject AsObject => this as JSONObject;
 
 
         #endregion typecasting properties
@@ -399,8 +408,10 @@ namespace SyncSaber.SimpleJSON
 
         public static implicit operator JSONNode(long n)
         {
-            if (longAsString)
+            if (longAsString) {
                 return new JSONString(n.ToString());
+            }
+
             return new JSONNumber(n);
         }
         public static implicit operator long(JSONNode d)
@@ -410,8 +421,10 @@ namespace SyncSaber.SimpleJSON
 
         public static implicit operator JSONNode(ulong n)
         {
-            if (longAsString)
+            if (longAsString) {
                 return new JSONString(n.ToString());
+            }
+
             return new JSONNumber(n);
         }
         public static implicit operator ulong(JSONNode d)
@@ -435,12 +448,16 @@ namespace SyncSaber.SimpleJSON
 
         public static bool operator ==(JSONNode a, object b)
         {
-            if (ReferenceEquals(a, b))
+            if (ReferenceEquals(a, b)) {
                 return true;
-            bool aIsNull = a is JSONNull || ReferenceEquals(a, null) || a is JSONLazyCreator;
-            bool bIsNull = b is JSONNull || ReferenceEquals(b, null) || b is JSONLazyCreator;
-            if (aIsNull && bIsNull)
+            }
+
+            var aIsNull = a is JSONNull || ReferenceEquals(a, null) || a is JSONLazyCreator;
+            var bIsNull = b is JSONNull || ReferenceEquals(b, null) || b is JSONLazyCreator;
+            if (aIsNull && bIsNull) {
                 return true;
+            }
+
             return !aIsNull && a.Equals(b);
         }
 
@@ -467,8 +484,10 @@ namespace SyncSaber.SimpleJSON
         {
             get
             {
-                if (m_EscapeBuilder == null)
+                if (m_EscapeBuilder == null) {
                     m_EscapeBuilder = new StringBuilder();
+                }
+
                 return m_EscapeBuilder;
             }
         }
@@ -476,9 +495,11 @@ namespace SyncSaber.SimpleJSON
         {
             var sb = EscapeBuilder;
             sb.Length = 0;
-            if (sb.Capacity < aText.Length + aText.Length / 10)
+            if (sb.Capacity < aText.Length + aText.Length / 10) {
                 sb.Capacity = aText.Length + aText.Length / 10;
-            foreach (char c in aText) {
+            }
+
+            foreach (var c in aText) {
                 switch (c) {
                     case '\\':
                         sb.Append("\\\\");
@@ -506,44 +527,52 @@ namespace SyncSaber.SimpleJSON
                             ushort val = c;
                             sb.Append("\\u").Append(val.ToString("X4"));
                         }
-                        else
+                        else {
                             sb.Append(c);
+                        }
+
                         break;
                 }
             }
-            string result = sb.ToString();
+            var result = sb.ToString();
             sb.Length = 0;
             return result;
         }
 
         private static JSONNode ParseElement(string token, bool quoted)
         {
-            if (quoted)
+            if (quoted) {
                 return token;
-            if (token.Length <= 5) {
-                string tmp = token.ToLower();
-                if (tmp == "false" || tmp == "true")
-                    return tmp == "true";
-                if (tmp == "null")
-                    return JSONNull.CreateOrGet();
             }
-            double val;
-            if (double.TryParse(token, NumberStyles.Float, CultureInfo.InvariantCulture, out val))
+
+            if (token.Length <= 5) {
+                var tmp = token.ToLower();
+                if (tmp == "false" || tmp == "true") {
+                    return tmp == "true";
+                }
+
+                if (tmp == "null") {
+                    return JSONNull.CreateOrGet();
+                }
+            }
+            if (double.TryParse(token, NumberStyles.Float, CultureInfo.InvariantCulture, out var val)) {
                 return val;
-            else
+            }
+            else {
                 return token;
+            }
         }
 
         public static JSONNode Parse(string aJSON)
         {
-            Stack<JSONNode> stack = new Stack<JSONNode>();
+            var stack = new System.Collections.Generic.Stack<JSONNode>();
             JSONNode ctx = null;
-            int i = 0;
-            StringBuilder Token = new StringBuilder();
-            string TokenName = "";
-            bool QuoteMode = false;
-            bool TokenIsQuoted = false;
-            bool HasNewlineChar = false;
+            var i = 0;
+            var Token = new StringBuilder();
+            var TokenName = "";
+            var QuoteMode = false;
+            var TokenIsQuoted = false;
+            var HasNewlineChar = false;
             while (i < aJSON.Length) {
                 switch (aJSON[i]) {
                     case '{':
@@ -584,19 +613,26 @@ namespace SyncSaber.SimpleJSON
                             Token.Append(aJSON[i]);
                             break;
                         }
-                        if (stack.Count == 0)
+                        if (stack.Count == 0) {
                             throw new Exception("JSON Parse: Too many closing brackets");
+                        }
 
                         stack.Pop();
-                        if (Token.Length > 0 || TokenIsQuoted)
+                        if (Token.Length > 0 || TokenIsQuoted) {
                             ctx.Add(TokenName, ParseElement(Token.ToString(), TokenIsQuoted));
-                        if (ctx != null)
+                        }
+
+                        if (ctx != null) {
                             ctx.Inline = !HasNewlineChar;
+                        }
+
                         TokenIsQuoted = false;
                         TokenName = "";
                         Token.Length = 0;
-                        if (stack.Count > 0)
+                        if (stack.Count > 0) {
                             ctx = stack.Peek();
+                        }
+
                         break;
 
                     case ':':
@@ -619,8 +655,10 @@ namespace SyncSaber.SimpleJSON
                             Token.Append(aJSON[i]);
                             break;
                         }
-                        if (Token.Length > 0 || TokenIsQuoted)
+                        if (Token.Length > 0 || TokenIsQuoted) {
                             ctx.Add(TokenName, ParseElement(Token.ToString(), TokenIsQuoted));
+                        }
+
                         TokenIsQuoted = false;
                         TokenName = "";
                         Token.Length = 0;
@@ -634,14 +672,16 @@ namespace SyncSaber.SimpleJSON
 
                     case ' ':
                     case '\t':
-                        if (QuoteMode)
+                        if (QuoteMode) {
                             Token.Append(aJSON[i]);
+                        }
+
                         break;
 
                     case '\\':
                         ++i;
                         if (QuoteMode) {
-                            char C = aJSON[i];
+                            var C = aJSON[i];
                             switch (C) {
                                 case 't':
                                     Token.Append('\t');
@@ -659,7 +699,7 @@ namespace SyncSaber.SimpleJSON
                                     Token.Append('\f');
                                     break;
                                 case 'u': {
-                                        string s = aJSON.Substring(i + 1, 4);
+                                        var s = aJSON.Substring(i + 1, 4);
                                         Token.Append((char)int.Parse(
                                             s,
                                             System.Globalization.NumberStyles.AllowHexSpecifier));
@@ -674,7 +714,10 @@ namespace SyncSaber.SimpleJSON
                         break;
                     case '/':
                         if (allowLineComments && !QuoteMode && i + 1 < aJSON.Length && aJSON[i + 1] == '/') {
-                            while (++i < aJSON.Length && aJSON[i] != '\n' && aJSON[i] != '\r') ;
+                            while (++i < aJSON.Length && aJSON[i] != '\n' && aJSON[i] != '\r') {
+                                ;
+                            }
+
                             break;
                         }
                         Token.Append(aJSON[i]);
@@ -691,8 +734,10 @@ namespace SyncSaber.SimpleJSON
             if (QuoteMode) {
                 throw new Exception("JSON Parse: Quotation marks seems to be messed up.");
             }
-            if (ctx == null)
+            if (ctx == null) {
                 return ParseElement(Token.ToString(), TokenIsQuoted);
+            }
+
             return ctx;
         }
 
@@ -705,61 +750,73 @@ namespace SyncSaber.SimpleJSON
         private bool inline = false;
         public override bool Inline
         {
-            get { return this.inline; }
-            set { this.inline = value; }
+            get => this.inline;
+            set => this.inline = value;
         }
 
-        public override JSONNodeType Tag { get { return JSONNodeType.Array; } }
-        public override bool IsArray { get { return true; } }
-        public override Enumerator GetEnumerator() { return new Enumerator(this.m_List.GetEnumerator()); }
+        public override JSONNodeType Tag => JSONNodeType.Array;
+        public override bool IsArray => true;
+        public override Enumerator GetEnumerator()
+        {
+            return new Enumerator(this.m_List.GetEnumerator());
+        }
 
         public override JSONNode this[int aIndex]
         {
             get
             {
-                if (aIndex < 0 || aIndex >= this.m_List.Count)
+                if (aIndex < 0 || aIndex >= this.m_List.Count) {
                     return new JSONLazyCreator(this);
+                }
+
                 return this.m_List[aIndex];
             }
             set
             {
-                if (value == null)
+                if (value == null) {
                     value = JSONNull.CreateOrGet();
-                if (aIndex < 0 || aIndex >= this.m_List.Count)
+                }
+
+                if (aIndex < 0 || aIndex >= this.m_List.Count) {
                     this.m_List.Add(value);
-                else
+                }
+                else {
                     this.m_List[aIndex] = value;
+                }
             }
         }
 
         public override JSONNode this[string aKey]
         {
-            get { return new JSONLazyCreator(this); }
+            get => new JSONLazyCreator(this);
             set
             {
-                if (value == null)
+                if (value == null) {
                     value = JSONNull.CreateOrGet();
+                }
+
                 this.m_List.Add(value);
             }
         }
 
-        public override int Count
-        {
-            get { return this.m_List.Count; }
-        }
+        public override int Count => this.m_List.Count;
 
         public override void Add(string aKey, JSONNode aItem)
         {
-            if (aItem == null)
+            if (aItem == null) {
                 aItem = JSONNull.CreateOrGet();
+            }
+
             this.m_List.Add(aItem);
         }
 
         public override JSONNode Remove(int aIndex)
         {
-            if (aIndex < 0 || aIndex >= this.m_List.Count)
+            if (aIndex < 0 || aIndex >= this.m_List.Count) {
                 return null;
-            JSONNode tmp = this.m_List[aIndex];
+            }
+
+            var tmp = this.m_List[aIndex];
             this.m_List.RemoveAt(aIndex);
             return tmp;
         }
@@ -780,10 +837,12 @@ namespace SyncSaber.SimpleJSON
             var node = new JSONArray();
             node.m_List.Capacity = this.m_List.Capacity;
             foreach (var n in this.m_List) {
-                if (n != null)
+                if (n != null) {
                     node.Add(n.Clone());
-                else
+                }
+                else {
                     node.Add(null);
+                }
             }
             return node;
         }
@@ -792,8 +851,9 @@ namespace SyncSaber.SimpleJSON
         {
             get
             {
-                foreach (JSONNode N in this.m_List)
+                foreach (var N in this.m_List) {
                     yield return N;
+                }
             }
         }
 
@@ -801,21 +861,30 @@ namespace SyncSaber.SimpleJSON
         internal override void WriteToStringBuilder(StringBuilder aSB, int aIndent, int aIndentInc, JSONTextMode aMode)
         {
             aSB.Append('[');
-            int count = this.m_List.Count;
-            if (this.inline)
+            var count = this.m_List.Count;
+            if (this.inline) {
                 aMode = JSONTextMode.Compact;
-            for (int i = 0; i < count; i++) {
-                if (i > 0)
-                    aSB.Append(',');
-                if (aMode == JSONTextMode.Indent)
-                    aSB.AppendLine();
+            }
 
-                if (aMode == JSONTextMode.Indent)
+            for (var i = 0; i < count; i++) {
+                if (i > 0) {
+                    aSB.Append(',');
+                }
+
+                if (aMode == JSONTextMode.Indent) {
+                    aSB.AppendLine();
+                }
+
+                if (aMode == JSONTextMode.Indent) {
                     aSB.Append(' ', aIndent + aIndentInc);
+                }
+
                 this.m_List[i].WriteToStringBuilder(aSB, aIndent + aIndentInc, aIndentInc, aMode);
             }
-            if (aMode == JSONTextMode.Indent)
+            if (aMode == JSONTextMode.Indent) {
                 aSB.AppendLine().Append(' ', aIndent);
+            }
+
             aSB.Append(']');
         }
     }
@@ -828,33 +897,41 @@ namespace SyncSaber.SimpleJSON
         private bool inline = false;
         public override bool Inline
         {
-            get { return this.inline; }
-            set { this.inline = value; }
+            get => this.inline;
+            set => this.inline = value;
         }
 
-        public override JSONNodeType Tag { get { return JSONNodeType.Object; } }
-        public override bool IsObject { get { return true; } }
+        public override JSONNodeType Tag => JSONNodeType.Object;
+        public override bool IsObject => true;
 
-        public override Enumerator GetEnumerator() { return new Enumerator(this.m_Dict.GetEnumerator()); }
-
+        public override Enumerator GetEnumerator()
+        {
+            return new Enumerator(this.m_Dict.GetEnumerator());
+        }
 
         public override JSONNode this[string aKey]
         {
             get
             {
-                if (this.m_Dict.ContainsKey(aKey))
+                if (this.m_Dict.ContainsKey(aKey)) {
                     return this.m_Dict[aKey];
-                else
+                }
+                else {
                     return new JSONLazyCreator(this, aKey);
+                }
             }
             set
             {
-                if (value == null)
+                if (value == null) {
                     value = JSONNull.CreateOrGet();
-                if (this.m_Dict.ContainsKey(aKey))
+                }
+
+                if (this.m_Dict.ContainsKey(aKey)) {
                     this.m_Dict[aKey] = value;
-                else
+                }
+                else {
                     this.m_Dict.Add(aKey, value);
+                }
             }
         }
 
@@ -862,54 +939,65 @@ namespace SyncSaber.SimpleJSON
         {
             get
             {
-                if (aIndex < 0 || aIndex >= this.m_Dict.Count)
+                if (aIndex < 0 || aIndex >= this.m_Dict.Count) {
                     return null;
+                }
+
                 return this.m_Dict.ElementAt(aIndex).Value;
             }
             set
             {
-                if (value == null)
+                if (value == null) {
                     value = JSONNull.CreateOrGet();
-                if (aIndex < 0 || aIndex >= this.m_Dict.Count)
+                }
+
+                if (aIndex < 0 || aIndex >= this.m_Dict.Count) {
                     return;
-                string key = this.m_Dict.ElementAt(aIndex).Key;
+                }
+
+                var key = this.m_Dict.ElementAt(aIndex).Key;
                 this.m_Dict[key] = value;
             }
         }
 
-        public override int Count
-        {
-            get { return this.m_Dict.Count; }
-        }
+        public override int Count => this.m_Dict.Count;
 
         public override void Add(string aKey, JSONNode aItem)
         {
-            if (aItem == null)
+            if (aItem == null) {
                 aItem = JSONNull.CreateOrGet();
+            }
 
             if (aKey != null) {
-                if (this.m_Dict.ContainsKey(aKey))
+                if (this.m_Dict.ContainsKey(aKey)) {
                     this.m_Dict[aKey] = aItem;
-                else
+                }
+                else {
                     this.m_Dict.Add(aKey, aItem);
+                }
             }
-            else
+            else {
                 this.m_Dict.Add(Guid.NewGuid().ToString(), aItem);
+            }
         }
 
         public override JSONNode Remove(string aKey)
         {
-            if (!this.m_Dict.ContainsKey(aKey))
+            if (!this.m_Dict.ContainsKey(aKey)) {
                 return null;
-            JSONNode tmp = this.m_Dict[aKey];
+            }
+
+            var tmp = this.m_Dict[aKey];
             this.m_Dict.Remove(aKey);
             return tmp;
         }
 
         public override JSONNode Remove(int aIndex)
         {
-            if (aIndex < 0 || aIndex >= this.m_Dict.Count)
+            if (aIndex < 0 || aIndex >= this.m_Dict.Count) {
                 return null;
+            }
+
             var item = this.m_Dict.ElementAt(aIndex);
             this.m_Dict.Remove(item.Key);
             return item.Value;
@@ -948,9 +1036,10 @@ namespace SyncSaber.SimpleJSON
 
         public override JSONNode GetValueOrDefault(string aKey, JSONNode aDefault)
         {
-            JSONNode res;
-            if (this.m_Dict.TryGetValue(aKey, out res))
+            if (this.m_Dict.TryGetValue(aKey, out var res)) {
                 return res;
+            }
+
             return aDefault;
         }
 
@@ -958,34 +1047,48 @@ namespace SyncSaber.SimpleJSON
         {
             get
             {
-                foreach (KeyValuePair<string, JSONNode> N in this.m_Dict)
+                foreach (var N in this.m_Dict) {
                     yield return N.Value;
+                }
             }
         }
 
         internal override void WriteToStringBuilder(StringBuilder aSB, int aIndent, int aIndentInc, JSONTextMode aMode)
         {
             aSB.Append('{');
-            bool first = true;
-            if (this.inline)
+            var first = true;
+            if (this.inline) {
                 aMode = JSONTextMode.Compact;
+            }
+
             foreach (var k in this.m_Dict) {
-                if (!first)
+                if (!first) {
                     aSB.Append(',');
+                }
+
                 first = false;
-                if (aMode == JSONTextMode.Indent)
+                if (aMode == JSONTextMode.Indent) {
                     aSB.AppendLine();
-                if (aMode == JSONTextMode.Indent)
+                }
+
+                if (aMode == JSONTextMode.Indent) {
                     aSB.Append(' ', aIndent + aIndentInc);
+                }
+
                 aSB.Append('\"').Append(Escape(k.Key)).Append('\"');
-                if (aMode == JSONTextMode.Compact)
+                if (aMode == JSONTextMode.Compact) {
                     aSB.Append(':');
-                else
+                }
+                else {
                     aSB.Append(" : ");
+                }
+
                 k.Value.WriteToStringBuilder(aSB, aIndent + aIndentInc, aIndentInc, aMode);
             }
-            if (aMode == JSONTextMode.Indent)
+            if (aMode == JSONTextMode.Indent) {
                 aSB.AppendLine().Append(' ', aIndent);
+            }
+
             aSB.Append('}');
         }
 
@@ -996,19 +1099,18 @@ namespace SyncSaber.SimpleJSON
     {
         private string m_Data;
 
-        public override JSONNodeType Tag { get { return JSONNodeType.String; } }
-        public override bool IsString { get { return true; } }
+        public override JSONNodeType Tag => JSONNodeType.String;
+        public override bool IsString => true;
 
-        public override Enumerator GetEnumerator() { return new Enumerator(); }
-
+        public override Enumerator GetEnumerator()
+        {
+            return new Enumerator();
+        }
 
         public override string Value
         {
-            get { return this.m_Data; }
-            set
-            {
-                this.m_Data = value;
-            }
+            get => this.m_Data;
+            set => this.m_Data = value;
         }
 
         public JSONString(string aData)
@@ -1024,22 +1126,30 @@ namespace SyncSaber.SimpleJSON
         {
             aSB.Append('\"').Append(Escape(this.m_Data)).Append('\"');
         }
+
         public override bool Equals(object obj)
         {
-            if (base.Equals(obj))
+            if (base.Equals(obj)) {
                 return true;
-            string s = obj as string;
-            if (s != null)
+            }
+
+            var s = obj as string;
+            if (s != null) {
                 return this.m_Data == s;
-            JSONString s2 = obj as JSONString;
-            if (s2 != null)
+            }
+
+            var s2 = obj as JSONString;
+            if (s2 != null) {
                 return this.m_Data == s2.m_Data;
+            }
+
             return false;
         }
         public override int GetHashCode()
         {
             return this.m_Data.GetHashCode();
         }
+
         public override void Clear()
         {
             this.m_Data = "";
@@ -1051,35 +1161,38 @@ namespace SyncSaber.SimpleJSON
     {
         private double m_Data;
 
-        public override JSONNodeType Tag { get { return JSONNodeType.Number; } }
-        public override bool IsNumber { get { return true; } }
-        public override Enumerator GetEnumerator() { return new Enumerator(); }
+        public override JSONNodeType Tag => JSONNodeType.Number;
+        public override bool IsNumber => true;
+        public override Enumerator GetEnumerator()
+        {
+            return new Enumerator();
+        }
 
         public override string Value
         {
-            get { return this.m_Data.ToString(CultureInfo.InvariantCulture); }
+            get => this.m_Data.ToString(CultureInfo.InvariantCulture);
             set
             {
-                double v;
-                if (double.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out v))
+                if (double.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out var v)) {
                     this.m_Data = v;
+                }
             }
         }
 
         public override double AsDouble
         {
-            get { return this.m_Data; }
-            set { this.m_Data = value; }
+            get => this.m_Data;
+            set => this.m_Data = value;
         }
         public override long AsLong
         {
-            get { return (long)this.m_Data; }
-            set { this.m_Data = value; }
+            get => (long)this.m_Data;
+            set => this.m_Data = value;
         }
         public override ulong AsULong
         {
-            get { return (ulong)this.m_Data; }
-            set { this.m_Data = value; }
+            get => (ulong)this.m_Data;
+            set => this.m_Data = value;
         }
 
         public JSONNumber(double aData)
@@ -1101,32 +1214,43 @@ namespace SyncSaber.SimpleJSON
         {
             aSB.Append(this.Value);
         }
+
         private static bool IsNumeric(object value)
         {
             return value is int || value is uint
-                || value is float || value is double
-                || value is decimal
-                || value is long || value is ulong
-                || value is short || value is ushort
-                || value is sbyte || value is byte;
+|| value is float || value is double
+|| value is decimal
+|| value is long || value is ulong
+|| value is short || value is ushort
+|| value is sbyte || value is byte;
         }
+
         public override bool Equals(object obj)
         {
-            if (obj == null)
+            if (obj == null) {
                 return false;
-            if (base.Equals(obj))
+            }
+
+            if (base.Equals(obj)) {
                 return true;
-            JSONNumber s2 = obj as JSONNumber;
-            if (s2 != null)
+            }
+
+            var s2 = obj as JSONNumber;
+            if (s2 != null) {
                 return this.m_Data == s2.m_Data;
-            if (IsNumeric(obj))
+            }
+
+            if (IsNumeric(obj)) {
                 return Convert.ToDouble(obj) == this.m_Data;
+            }
+
             return false;
         }
         public override int GetHashCode()
         {
             return this.m_Data.GetHashCode();
         }
+
         public override void Clear()
         {
             this.m_Data = 0;
@@ -1138,24 +1262,27 @@ namespace SyncSaber.SimpleJSON
     {
         private bool m_Data;
 
-        public override JSONNodeType Tag { get { return JSONNodeType.Boolean; } }
-        public override bool IsBoolean { get { return true; } }
-        public override Enumerator GetEnumerator() { return new Enumerator(); }
+        public override JSONNodeType Tag => JSONNodeType.Boolean;
+        public override bool IsBoolean => true;
+        public override Enumerator GetEnumerator()
+        {
+            return new Enumerator();
+        }
 
         public override string Value
         {
-            get { return this.m_Data.ToString(); }
+            get => this.m_Data.ToString();
             set
             {
-                bool v;
-                if (bool.TryParse(value, out v))
+                if (bool.TryParse(value, out var v)) {
                     this.m_Data = v;
+                }
             }
         }
         public override bool AsBool
         {
-            get { return this.m_Data; }
-            set { this.m_Data = value; }
+            get => this.m_Data;
+            set => this.m_Data = value;
         }
 
         public JSONBool(bool aData)
@@ -1177,18 +1304,24 @@ namespace SyncSaber.SimpleJSON
         {
             aSB.Append((this.m_Data) ? "true" : "false");
         }
+
         public override bool Equals(object obj)
         {
-            if (obj == null)
+            if (obj == null) {
                 return false;
-            if (obj is bool)
+            }
+
+            if (obj is bool) {
                 return this.m_Data == (bool)obj;
+            }
+
             return false;
         }
         public override int GetHashCode()
         {
             return this.m_Data.GetHashCode();
         }
+
         public override void Clear()
         {
             this.m_Data = false;
@@ -1202,24 +1335,29 @@ namespace SyncSaber.SimpleJSON
         public static bool reuseSameInstance = true;
         public static JSONNull CreateOrGet()
         {
-            if (reuseSameInstance)
+            if (reuseSameInstance) {
                 return m_StaticInstance;
+            }
+
             return new JSONNull();
         }
         private JSONNull() { }
 
-        public override JSONNodeType Tag { get { return JSONNodeType.NullValue; } }
-        public override bool IsNull { get { return true; } }
-        public override Enumerator GetEnumerator() { return new Enumerator(); }
+        public override JSONNodeType Tag => JSONNodeType.NullValue;
+        public override bool IsNull => true;
+        public override Enumerator GetEnumerator()
+        {
+            return new Enumerator();
+        }
 
         public override string Value
         {
-            get { return "null"; }
+            get => "null";
             set { }
         }
         public override bool AsBool
         {
-            get { return false; }
+            get => false;
             set { }
         }
 
@@ -1230,8 +1368,10 @@ namespace SyncSaber.SimpleJSON
 
         public override bool Equals(object obj)
         {
-            if (object.ReferenceEquals(this, obj))
+            if (object.ReferenceEquals(this, obj)) {
                 return true;
+            }
+
             return (obj is JSONNull);
         }
         public override int GetHashCode()
@@ -1250,8 +1390,11 @@ namespace SyncSaber.SimpleJSON
     {
         private JSONNode m_Node = null;
         private readonly string m_Key = null;
-        public override JSONNodeType Tag { get { return JSONNodeType.None; } }
-        public override Enumerator GetEnumerator() { return new Enumerator(); }
+        public override JSONNodeType Tag => JSONNodeType.None;
+        public override Enumerator GetEnumerator()
+        {
+            return new Enumerator();
+        }
 
         public JSONLazyCreator(JSONNode aNode)
         {
@@ -1267,24 +1410,27 @@ namespace SyncSaber.SimpleJSON
 
         private T Set<T>(T aVal) where T : JSONNode
         {
-            if (this.m_Key == null)
+            if (this.m_Key == null) {
                 this.m_Node.Add(aVal);
-            else
+            }
+            else {
                 this.m_Node.Add(this.m_Key, aVal);
+            }
+
             this.m_Node = null; // Be GC friendly.
             return aVal;
         }
 
         public override JSONNode this[int aIndex]
         {
-            get { return new JSONLazyCreator(this); }
-            set { this.Set(new JSONArray()).Add(value); }
+            get => new JSONLazyCreator(this);
+            set => this.Set(new JSONArray()).Add(value);
         }
 
         public override JSONNode this[string aKey]
         {
-            get { return new JSONLazyCreator(this, aKey); }
-            set { this.Set(new JSONObject()).Add(aKey, value); }
+            get => new JSONLazyCreator(this, aKey);
+            set => this.Set(new JSONObject()).Add(aKey, value);
         }
 
         public override void Add(JSONNode aItem)
@@ -1299,8 +1445,10 @@ namespace SyncSaber.SimpleJSON
 
         public static bool operator ==(JSONLazyCreator a, object b)
         {
-            if (b == null)
+            if (b == null) {
                 return true;
+            }
+
             return System.Object.ReferenceEquals(a, b);
         }
 
@@ -1311,8 +1459,10 @@ namespace SyncSaber.SimpleJSON
 
         public override bool Equals(object obj)
         {
-            if (obj == null)
+            if (obj == null) {
                 return true;
+            }
+
             return System.Object.ReferenceEquals(this, obj);
         }
 
@@ -1324,37 +1474,42 @@ namespace SyncSaber.SimpleJSON
         public override int AsInt
         {
             get { this.Set(new JSONNumber(0)); return 0; }
-            set { this.Set(new JSONNumber(value)); }
+            set => this.Set(new JSONNumber(value));
         }
 
         public override float AsFloat
         {
             get { this.Set(new JSONNumber(0.0f)); return 0.0f; }
-            set { this.Set(new JSONNumber(value)); }
+            set => this.Set(new JSONNumber(value));
         }
 
         public override double AsDouble
         {
             get { this.Set(new JSONNumber(0.0)); return 0.0; }
-            set { this.Set(new JSONNumber(value)); }
+            set => this.Set(new JSONNumber(value));
         }
 
         public override long AsLong
         {
             get
             {
-                if (longAsString)
+                if (longAsString) {
                     this.Set(new JSONString("0"));
-                else
+                }
+                else {
                     this.Set(new JSONNumber(0.0));
+                }
+
                 return 0L;
             }
             set
             {
-                if (longAsString)
+                if (longAsString) {
                     this.Set(new JSONString(value.ToString()));
-                else
+                }
+                else {
                     this.Set(new JSONNumber(value));
+                }
             }
         }
 
@@ -1362,36 +1517,35 @@ namespace SyncSaber.SimpleJSON
         {
             get
             {
-                if (longAsString)
+                if (longAsString) {
                     this.Set(new JSONString("0"));
-                else
+                }
+                else {
                     this.Set(new JSONNumber(0.0));
+                }
+
                 return 0L;
             }
             set
             {
-                if (longAsString)
+                if (longAsString) {
                     this.Set(new JSONString(value.ToString()));
-                else
+                }
+                else {
                     this.Set(new JSONNumber(value));
+                }
             }
         }
 
         public override bool AsBool
         {
             get { this.Set(new JSONBool(false)); return false; }
-            set { this.Set(new JSONBool(value)); }
+            set => this.Set(new JSONBool(value));
         }
 
-        public override JSONArray AsArray
-        {
-            get { return this.Set(new JSONArray()); }
-        }
+        public override JSONArray AsArray => this.Set(new JSONArray());
 
-        public override JSONObject AsObject
-        {
-            get { return this.Set(new JSONObject()); }
-        }
+        public override JSONObject AsObject => this.Set(new JSONObject());
         internal override void WriteToStringBuilder(StringBuilder aSB, int aIndent, int aIndentInc, JSONTextMode aMode)
         {
             aSB.Append("null");

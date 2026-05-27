@@ -42,9 +42,15 @@
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BeatSaverDownloader, Version=3.2.4.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="BeatSaber.ViewSystem, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <Private>False</Private>
+      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\BeatSaber.ViewSystem.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(BeatSaberDir)\Plugins\BeatSaverDownloader.dll</HintPath>
+    </Reference>
+    <Reference Include="BGLib.AppFlow, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <Private>False</Private>
+      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\BGLib.AppFlow.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="BSML, Version=1.3.4.0, Culture=neutral, processorArchitecture=MSIL">
       <Private>False</Private>
@@ -54,6 +60,11 @@
     <Reference Include="BS_Utils, Version=1.4.11.0, Culture=neutral, processorArchitecture=MSIL">
       <Private>False</Private>
       <HintPath>$(BeatSaberDir)\Plugins\BS_Utils.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="DataModels, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <Private>False</Private>
+      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\DataModels.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="HMLib, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -79,18 +90,10 @@
       <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\Main.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="PlaylistDownLoader, Version=0.2.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <Private>False</Private>
-      <HintPath>$(BeatSaberDir)\Plugins\PlaylistDownLoader.dll</HintPath>
-      <SpecificVersion>False</SpecificVersion>
-    </Reference>
     <Reference Include="SiraUtil, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <Private>False</Private>
       <HintPath>$(BeatSaberDir)\Plugins\SiraUtil.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
-    </Reference>
-    <Reference Include="SongBrowser">
-      <HintPath>$(BeatSaberDir)\Plugins\SongBrowser.dll</HintPath>
     </Reference>
     <Reference Include="SongCore, Version=3.2.1.0, Culture=neutral, processorArchitecture=MSIL">
       <Private>False</Private>
@@ -99,13 +102,18 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL" />
     <Reference Include="System.IO.Compression.FileSystem" />
-    <Reference Include="System.Net.Http, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="System.Net.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="Unity.ResourceManager, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <Private>False</Private>
+      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\Unity.ResourceManager.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
     <Reference Include="Unity.TextMeshPro">
       <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\Unity.TextMeshPro.dll</HintPath>
     </Reference>
@@ -172,7 +180,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BeatSaberUI.cs" />
     <Compile Include="Configuration\PluginConfig.cs" />
     <Compile Include="Extentions\HashSetExtention.cs" />
     <Compile Include="Extentions\LoaderExtention.cs" />
@@ -186,26 +193,40 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ScoreSabers\ScoreSaberManager.cs" />
     <Compile Include="SimpleJSON\SimpleJSON.cs" />
-    <Compile Include="SongListUtils.cs" />
-    <Compile Include="SyncSaber.cs" />
+    <Compile Include="SongListUtil.cs" />
+    <Compile Include="Statics\Enums.cs" />
+    <Compile Include="SyncSaberController.cs" />
     <Compile Include="UI\SettingViewController.cs" />
-    <Compile Include="Utilities\Utility.cs" />
-    <Compile Include="Views\RootViewController.cs" />
-    <Compile Include="Views\SyncSaberController.cs" />
+    <Compile Include="Utilities\IO_Util.cs" />
+    <Compile Include="Utilities\MainThreadInvoker.cs" />
+    <Compile Include="Utilities\PlaylistDownLoader\Utility.cs" />
+    <Compile Include="Utilities\Stack.cs" />
+    <Compile Include="Utilities\TMPUtil.cs" />
+    <Compile Include="Views\NotificationViewController.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="BuildTargets.targets" />
     <EmbeddedResource Include="UI\SettingView.bsml" />
     <EmbeddedResource Include="UI\SyncSaber.bsml" />
-    <EmbeddedResource Include="Views\SyncSaberController.bsml">
-      <DependentUpon>SyncSaberController.cs</DependentUpon>
+    <EmbeddedResource Include="Views\NotificationViewController.bsml">
+      <DependentUpon>NotificationViewController.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="manifest.json" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Directory.Build.props" Condition="Exists('Directory.Build.props')" />
+    <None Include="SyncSaber.csproj.user" Condition="Exists('SyncSaber.csproj.user')" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="BeatSaberModdingTools.Tasks">
+      <Version>2.0.0-beta7</Version>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.1" PrivateAssets="all" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="BuildTargets.targets" />
   <PropertyGroup>
     <PostBuildEvent>
     </PostBuildEvent>

@@ -25,10 +25,10 @@ namespace SyncSaber
         {
             lock (_lockObject) {
                 try {
-                    string playlistPath = $"Playlists\\{playlist.fileName}{(playlist.oldFormat ? ".json" : ".bplist")}";
-                    String json = File.ReadAllText(playlistPath);
+                    var playlistPath = $"Playlists\\{playlist.fileName}{(playlist.oldFormat ? ".json" : ".bplist")}";
+                    var json = File.ReadAllText(playlistPath);
 
-                    JSONNode playlistNode = JSON.Parse(json);
+                    var playlistNode = JSON.Parse(json);
 
                     playlist.Image = playlistNode["image"];
                     playlist.Title = playlistNode["playlistTitle"];
@@ -59,10 +59,10 @@ namespace SyncSaber
                 playlistNode.Add("playlistAuthor", new JSONString(playlist.Author));
                 playlistNode.Add("image", new JSONString(playlist.Image));
 
-                JSONArray songArray = new JSONArray();
+                var songArray = new JSONArray();
                 try {
-                    foreach (PlaylistSong s in playlist.Songs) {
-                        JSONObject songObject = new JSONObject();
+                    foreach (var s in playlist.Songs) {
+                        var songObject = new JSONObject();
                         songObject.Add("hash", new JSONString(s.hash));
                         songObject.Add("songName", new JSONString(s.songName));
                         songArray.Add(songObject);
@@ -75,7 +75,10 @@ namespace SyncSaber
 
                 playlistNode.Add("fileLoc", new JSONString("1"));
 
-                if (!Directory.Exists("Playlists")) Directory.CreateDirectory("Playlists");
+                if (!Directory.Exists("Playlists")) {
+                    Directory.CreateDirectory("Playlists");
+                }
+
                 File.WriteAllText($"Playlists\\{playlist.fileName}{(playlist.oldFormat ? ".json" : ".bplist")}", playlistNode.ToString());
             }
         }
@@ -115,12 +118,12 @@ namespace SyncSaber
 
         public bool ReadPlaylist()
         {
-            string oldPlaylistPath = $"Playlists\\{this.fileName}.json";
-            string newPlaylistPath = $"Playlists\\{this.fileName}.bplist";
+            var oldPlaylistPath = $"Playlists\\{this.fileName}.json";
+            var newPlaylistPath = $"Playlists\\{this.fileName}.bplist";
             this.oldFormat = File.Exists(oldPlaylistPath);
             Logger.Info($"Playlist \"{this.Title}\" found in {(this.oldFormat ? "old" : "new")} playlist format.");
 
-            string playlistPath = this.oldFormat ? oldPlaylistPath : newPlaylistPath;
+            var playlistPath = this.oldFormat ? oldPlaylistPath : newPlaylistPath;
             if (File.Exists(playlistPath)) {
                 var playlist = PlaylistIO.ReadPlaylistSongs(this);
                 if (playlist != null) {

@@ -6,8 +6,10 @@ This mod keeps all your songs up to date, and additionally downloads all the new
 - MapperFeed
    * SyncSaber can download songs from any of your favorite mappers! All you have to do is create a file called FavoriteMappers.ini in the UserData folder inside your Beat saber director, then enter your favorite mappers BeatSaver usernames (one mapper per line) into FavoriteMappers.ini.
 - BeastSaberFeed
-   * If you want SyncSaber to automatically download content from your BeastSaber bookmarks/followings feeds, all you have to do is enter your BeastSaber username in the Beat Saber settings menu under the SyncSaber submenu. You can also enable the "Curator Recommended" BeastSaber feed, which automatically downloads the best songs recently recommended by curators on BeastSaber!
-
+   * If you want SyncSaber to automatically download content from your BeastSaber bookmarks/followings feeds, all you have to do is enter your BeastSaber username in the Beat Saber settings menu under the SyncSaber submenu. You can also enable the "Curator Recommended" BeastSaber feed, which automatically downloads the best songs recently recommended by curators on BeastSaber!  
+- AutoDownload Rank Songs  
+   * Download the rank maps.  
+  
 # Dependencies
 SyncSaber requires [CustomUI](https://github.com/brian91292/BeatSaber-CustomUI/releases) and [SongLoader](https://github.com/Kylemc1413/BeatSaberSongLoader/releases), both of which are available on the [BeatMods](https://beatmods.com/).
 
@@ -26,9 +28,11 @@ SyncSaber settings are stored in the modprefs.ini which you can find in the User
 | **SyncBookmarksFeed**| Whether or not to automatically sync your bookmarks feed from BeastSaber. |
 | **SyncFollowingsFeed**| Whether or not to automatically sync your followings feed from BeastSaber. |
 | **SyncCuratorRecommendedFeed**| Whether or not to automatically sync the curator recommended feed from BeastSaber. |
+| **SyncPPSongs**| Whether or not to automatically sync rank maps. |
 | **MaxBookmarksPages**| The maximum number of bookmarks pages to scan for new songs on BeastSaber, 0 is unlimited. |
 | **MaxFollowingsPages**| The maximum number of followings pages to scan for new songs on BeastSaber, 0 is unlimited. |
 | **MaxCuratorRecommendedPages**| The maximum number of curator recommended pages to scan for new songs on BeastSaber, 0 is unlimited. |
+| **MaxPPSongsCount**| The maximum number of curator ranked songs. |
 
 # Download
-[Click here to download the latest version of SyncSaber!](https://github.com/brian91292/SyncSaber/releases)
+[Click here to download the latest version of SyncSaber!](https://github.com/denpadokei/SyncSaber/releases/latest)

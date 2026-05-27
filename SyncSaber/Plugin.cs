@@ -6,7 +6,7 @@ using IPA.Loader;
 using SiraUtil.Zenject;
 using SyncSaber.Installers;
 using SyncSaber.UI;
-using SyncSaber.Utilities;
+using SyncSaber.Utilities.PlaylistDownLoader;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -20,10 +20,8 @@ namespace SyncSaber
     public class Plugin
     {
         public bool IsInGame { get; private set; }
-
-        public bool IsPlaylistDownlaoderInstalled => PluginManager.GetPlugin("PlaylistDownLoader") != null;
         public static HashSet<string> SongDownloadHistory { get; } = new HashSet<string>();
-        internal static Plugin instance { get; private set; }
+        internal static Plugin Instance { get; private set; }
         public string Name => "SyncSaber";
 
         [Init]
@@ -34,12 +32,12 @@ namespace SyncSaber
         /// </summary>
         public void Init(IPALogger logger, IPA.Config.Config conf, Zenjector zenjector)
         {
-            instance = this;
-            Logger.log = logger;
-            Logger.log.Debug("Logger initialized.");
+            Instance = this;
+            Logger.Log = logger;
+            Logger.Log.Debug("Logger initialized.");
             Configuration.PluginConfig.Instance = conf.Generated<Configuration.PluginConfig>();
-            Logger.log.Debug("Config loaded");
-            zenjector.OnMenu<SyncSaberInstaller>();
+            Logger.Log.Debug("Config loaded");
+            zenjector.Install<SyncSaberInstaller>(Location.Menu);
         }
 
         private async Task DelayedStartup()
@@ -56,7 +54,7 @@ namespace SyncSaber
         [OnStart]
         public void OnApplicationStart()
         {
-            instance = this;
+            Instance = this;
 
             BSEvents.earlyMenuSceneLoadedFresh += this.BSEvents_earlyMenuSceneLoadedFresh;
             SceneManager.activeSceneChanged += this.SceneManagerOnActiveSceneChanged;
@@ -65,12 +63,7 @@ namespace SyncSaber
 
         private void BSEvents_earlyMenuSceneLoadedFresh(ScenesTransitionSetupDataSO obj)
         {
-            try {
-                BSMLSettings.instance.AddSettingsMenu("SYNC SABER", SettingViewController.instance.ResourceName, SettingViewController.instance);
-            }
-            catch (Exception e) {
-                Logger.Error(e);
-            }
+            
         }
 
 
